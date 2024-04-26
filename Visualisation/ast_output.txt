@@ -1,0 +1,1176 @@
+FileAST: 
+  Typedef: Node, [], ['typedef']
+    TypeDecl: Node, [], None
+      Struct: Node
+        Decl: value, [], [], [], []
+          PtrDecl: []
+            TypeDecl: value, [], None
+              IdentifierType: ['char']
+        Decl: type, [], [], [], []
+          PtrDecl: []
+            TypeDecl: type, [], None
+              IdentifierType: ['char']
+        Decl: child, [], [], [], []
+          PtrDecl: []
+            TypeDecl: child, [], None
+              Struct: Node
+        Decl: sibling, [], [], [], []
+          PtrDecl: []
+            TypeDecl: sibling, [], None
+              Struct: Node
+  FuncDef: 
+    Decl: newNode, [], [], [], []
+      FuncDecl: 
+        ParamList: 
+          Decl: value, [], [], [], []
+            PtrDecl: []
+              TypeDecl: value, [], None
+                IdentifierType: ['char']
+          Decl: type, [], [], [], []
+            PtrDecl: []
+              TypeDecl: type, [], None
+                IdentifierType: ['char']
+        PtrDecl: []
+          TypeDecl: newNode, [], None
+            IdentifierType: ['Node']
+    Compound: 
+      Decl: node, [], [], [], []
+        PtrDecl: []
+          TypeDecl: node, [], None
+            IdentifierType: ['Node']
+        Cast: 
+          Typename: None, [], None
+            PtrDecl: []
+              TypeDecl: None, [], None
+                IdentifierType: ['Node']
+          FuncCall: 
+            ID: malloc
+            ExprList: 
+              UnaryOp: sizeof
+                Typename: None, [], None
+                  TypeDecl: None, [], None
+                    IdentifierType: ['Node']
+      Assignment: =
+        StructRef: ->
+          ID: node
+          ID: value
+        FuncCall: 
+          ID: strdup
+          ExprList: 
+            ID: value
+      Assignment: =
+        StructRef: ->
+          ID: node
+          ID: type
+        FuncCall: 
+          ID: strdup
+          ExprList: 
+            ID: type
+      Assignment: =
+        StructRef: ->
+          ID: node
+          ID: child
+        ID: NULL
+      Assignment: =
+        StructRef: ->
+          ID: node
+          ID: sibling
+        ID: NULL
+      Return: 
+        ID: node
+  FuncDef: 
+    Decl: addChild, [], [], [], []
+      FuncDecl: 
+        ParamList: 
+          Decl: parent, [], [], [], []
+            PtrDecl: []
+              TypeDecl: parent, [], None
+                IdentifierType: ['Node']
+          Decl: child, [], [], [], []
+            PtrDecl: []
+              TypeDecl: child, [], None
+                IdentifierType: ['Node']
+        TypeDecl: addChild, [], None
+          IdentifierType: ['void']
+    Compound: 
+      If: 
+        BinaryOp: ==
+          StructRef: ->
+            ID: parent
+            ID: child
+          ID: NULL
+        Compound: 
+          Assignment: =
+            StructRef: ->
+              ID: parent
+              ID: child
+            ID: child
+        Compound: 
+          Decl: temp, [], [], [], []
+            PtrDecl: []
+              TypeDecl: temp, [], None
+                IdentifierType: ['Node']
+            StructRef: ->
+              ID: parent
+              ID: child
+          While: 
+            BinaryOp: !=
+              StructRef: ->
+                ID: temp
+                ID: sibling
+              ID: NULL
+            Compound: 
+              Assignment: =
+                ID: temp
+                StructRef: ->
+                  ID: temp
+                  ID: sibling
+          Assignment: =
+            StructRef: ->
+              ID: temp
+              ID: sibling
+            ID: child
+  FuncDef: 
+    Decl: performSemanticAnalysis, [], [], [], []
+      FuncDecl: 
+        ParamList: 
+          Decl: root, [], [], [], []
+            PtrDecl: []
+              TypeDecl: root, [], None
+                IdentifierType: ['Node']
+        TypeDecl: performSemanticAnalysis, [], None
+          IdentifierType: ['int']
+    Compound: 
+      Decl: node, [], [], [], []
+        PtrDecl: []
+          TypeDecl: node, [], None
+            IdentifierType: ['Node']
+        StructRef: ->
+          ID: root
+          ID: child
+      While: 
+        BinaryOp: !=
+          ID: node
+          ID: NULL
+        Compound: 
+          If: 
+            BinaryOp: ==
+              FuncCall: 
+                ID: strcmp
+                ExprList: 
+                  StructRef: ->
+                    ID: node
+                    ID: type
+                  Constant: string, "input_url"
+              Constant: int, 0
+            Compound: 
+              Decl: url, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: url, [], None
+                    IdentifierType: ['char']
+                StructRef: ->
+                  ID: node
+                  ID: value
+              If: 
+                BinaryOp: ||
+                  BinaryOp: ==
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        ID: url
+                        Constant: string, "http://"
+                    ID: url
+                  BinaryOp: ==
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        ID: url
+                        Constant: string, "https://"
+                    ID: url
+                Compound: 
+                  Assignment: +=
+                    ID: url
+                    Constant: int, 7
+              Decl: domain, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: domain, [], None
+                    IdentifierType: ['char']
+                BinaryOp: +
+                  FuncCall: 
+                    ID: strchr
+                    ExprList: 
+                      ID: url
+                      Constant: char, '/'
+                  Constant: int, 2
+              If: 
+                BinaryOp: ==
+                  ID: domain
+                  ID: NULL
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+              Decl: domainEnd, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: domainEnd, [], None
+                    IdentifierType: ['char']
+                FuncCall: 
+                  ID: strchr
+                  ExprList: 
+                    ID: domain
+                    Constant: char, '/'
+              If: 
+                BinaryOp: ==
+                  ID: domainEnd
+                  ID: NULL
+                Compound: 
+                  Assignment: =
+                    ID: domainEnd
+                    FuncCall: 
+                      ID: strchr
+                      ExprList: 
+                        ID: domain
+                        Constant: char, '\0'
+              Decl: domainName, [], [], [], []
+                ArrayDecl: []
+                  TypeDecl: domainName, [], None
+                    IdentifierType: ['char']
+                  Constant: int, 256
+              FuncCall: 
+                ID: strncpy
+                ExprList: 
+                  ID: domainName
+                  ID: domain
+                  BinaryOp: -
+                    ID: domainEnd
+                    ID: domain
+              Assignment: =
+                ArrayRef: 
+                  ID: domainName
+                  BinaryOp: -
+                    ID: domainEnd
+                    ID: domain
+                Constant: char, '\0'
+              If: 
+                BinaryOp: ||
+                  BinaryOp: ||
+                    BinaryOp: ||
+                      BinaryOp: !=
+                        FuncCall: 
+                          ID: strstr
+                          ExprList: 
+                            ID: domainName
+                            Constant: string, "phish"
+                        ID: NULL
+                      BinaryOp: !=
+                        FuncCall: 
+                          ID: strstr
+                          ExprList: 
+                            ID: domainName
+                            Constant: string, "malware"
+                        ID: NULL
+                    BinaryOp: !=
+                      FuncCall: 
+                        ID: strstr
+                        ExprList: 
+                          ID: domainName
+                          Constant: string, "attack"
+                      ID: NULL
+                  BinaryOp: !=
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        ID: domainName
+                        Constant: string, "exploit"
+                    ID: NULL
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+              Decl: dot, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: dot, [], None
+                    IdentifierType: ['char']
+                FuncCall: 
+                  ID: strrchr
+                  ExprList: 
+                    ID: url
+                    Constant: char, '.'
+              If: 
+                BinaryOp: !=
+                  ID: dot
+                  ID: NULL
+                Compound: 
+                  Assignment: =
+                    UnaryOp: *
+                      ID: dot
+                    Constant: char, '\0'
+                  Decl: domainName, [], [], [], []
+                    PtrDecl: []
+                      TypeDecl: domainName, [], None
+                        IdentifierType: ['char']
+                    BinaryOp: +
+                      ID: dot
+                      Constant: int, 1
+                  Assignment: =
+                    UnaryOp: *
+                      ID: dot
+                    Constant: char, '.'
+                  Decl: countryCode, [], [], [], []
+                    PtrDecl: []
+                      TypeDecl: countryCode, [], None
+                        IdentifierType: ['char']
+                    FuncCall: 
+                      ID: strrchr
+                      ExprList: 
+                        ID: url
+                        Constant: char, '.'
+                  If: 
+                    BinaryOp: !=
+                      ID: countryCode
+                      ID: NULL
+                    Compound: 
+                      UnaryOp: p++
+                        ID: countryCode
+                      Decl: country_domains, ['const'], [], [], []
+                        ArrayDecl: []
+                          PtrDecl: []
+                            TypeDecl: country_domains, ['const'], None
+                              IdentifierType: ['char']
+                        InitList: 
+                          Constant: string, "ac"
+                          Constant: string, "ad"
+                          Constant: string, "ae"
+                          Constant: string, "af"
+                          Constant: string, "ag"
+                          Constant: string, "ai"
+                          Constant: string, "al"
+                          Constant: string, "am"
+                          Constant: string, "an"
+                          Constant: string, "ao"
+                          Constant: string, "aq"
+                          Constant: string, "ar"
+                          Constant: string, "as"
+                          Constant: string, "at"
+                          Constant: string, "au"
+                          Constant: string, "aw"
+                          Constant: string, "ax"
+                          Constant: string, "az"
+                          Constant: string, "ba"
+                          Constant: string, "bb"
+                          Constant: string, "bd"
+                          Constant: string, "be"
+                          Constant: string, "bf"
+                          Constant: string, "bg"
+                          Constant: string, "bh"
+                          Constant: string, "bi"
+                          Constant: string, "bj"
+                          Constant: string, "bl"
+                          Constant: string, "bm"
+                          Constant: string, "bn"
+                          Constant: string, "bo"
+                          Constant: string, "bq"
+                          Constant: string, "br"
+                          Constant: string, "bs"
+                          Constant: string, "bt"
+                          Constant: string, "bv"
+                          Constant: string, "bw"
+                          Constant: string, "by"
+                          Constant: string, "bz"
+                          Constant: string, "ca"
+                          Constant: string, "cc"
+                          Constant: string, "cd"
+                          Constant: string, "cf"
+                          Constant: string, "cg"
+                          Constant: string, "ch"
+                          Constant: string, "ci"
+                          Constant: string, "ck"
+                          Constant: string, "cl"
+                          Constant: string, "cm"
+                          Constant: string, "cn"
+                          Constant: string, "co"
+                          Constant: string, "cr"
+                          Constant: string, "cu"
+                          Constant: string, "cv"
+                          Constant: string, "cw"
+                          Constant: string, "cx"
+                          Constant: string, "cy"
+                          Constant: string, "cz"
+                          Constant: string, "de"
+                          Constant: string, "dj"
+                          Constant: string, "dk"
+                          Constant: string, "dm"
+                          Constant: string, "do"
+                          Constant: string, "dz"
+                          Constant: string, "ec"
+                          Constant: string, "ee"
+                          Constant: string, "eg"
+                          Constant: string, "eh"
+                          Constant: string, "er"
+                          Constant: string, "es"
+                          Constant: string, "et"
+                          Constant: string, "eu"
+                          Constant: string, "fi"
+                          Constant: string, "fj"
+                          Constant: string, "fk"
+                          Constant: string, "fm"
+                          Constant: string, "fo"
+                          Constant: string, "fr"
+                          Constant: string, "ga"
+                          Constant: string, "gb"
+                          Constant: string, "gd"
+                          Constant: string, "ge"
+                          Constant: string, "gf"
+                          Constant: string, "gg"
+                          Constant: string, "gh"
+                          Constant: string, "gi"
+                          Constant: string, "gl"
+                          Constant: string, "gm"
+                          Constant: string, "gn"
+                          Constant: string, "gp"
+                          Constant: string, "gq"
+                          Constant: string, "gr"
+                          Constant: string, "gs"
+                          Constant: string, "gt"
+                          Constant: string, "gu"
+                          Constant: string, "gw"
+                          Constant: string, "gy"
+                          Constant: string, "hk"
+                          Constant: string, "hm"
+                          Constant: string, "hn"
+                          Constant: string, "hr"
+                          Constant: string, "ht"
+                          Constant: string, "hu"
+                          Constant: string, "id"
+                          Constant: string, "ie"
+                          Constant: string, "il"
+                          Constant: string, "im"
+                          Constant: string, "in"
+                          Constant: string, "io"
+                          Constant: string, "iq"
+                          Constant: string, "ir"
+                          Constant: string, "is"
+                          Constant: string, "it"
+                          Constant: string, "je"
+                          Constant: string, "jm"
+                          Constant: string, "jo"
+                          Constant: string, "jp"
+                          Constant: string, "ke"
+                          Constant: string, "kg"
+                          Constant: string, "kh"
+                          Constant: string, "ki"
+                          Constant: string, "km"
+                          Constant: string, "kn"
+                          Constant: string, "kp"
+                          Constant: string, "kr"
+                          Constant: string, "kw"
+                          Constant: string, "ky"
+                          Constant: string, "kz"
+                          Constant: string, "la"
+                          Constant: string, "lb"
+                          Constant: string, "lc"
+                          Constant: string, "li"
+                          Constant: string, "lk"
+                          Constant: string, "lr"
+                          Constant: string, "ls"
+                          Constant: string, "lt"
+                          Constant: string, "lu"
+                          Constant: string, "lv"
+                          Constant: string, "ly"
+                          Constant: string, "ma"
+                          Constant: string, "mc"
+                          Constant: string, "md"
+                          Constant: string, "me"
+                          Constant: string, "mf"
+                          Constant: string, "mg"
+                          Constant: string, "mh"
+                          Constant: string, "mk"
+                          Constant: string, "ml"
+                          Constant: string, "mm"
+                          Constant: string, "mn"
+                          Constant: string, "mo"
+                          Constant: string, "mp"
+                          Constant: string, "mq"
+                          Constant: string, "mr"
+                          Constant: string, "ms"
+                          Constant: string, "mt"
+                          Constant: string, "mu"
+                          Constant: string, "mv"
+                          Constant: string, "mw"
+                          Constant: string, "mx"
+                          Constant: string, "my"
+                          Constant: string, "mz"
+                          Constant: string, "na"
+                          Constant: string, "nc"
+                          Constant: string, "ne"
+                          Constant: string, "nf"
+                          Constant: string, "ng"
+                          Constant: string, "ni"
+                          Constant: string, "nl"
+                          Constant: string, "no"
+                          Constant: string, "np"
+                          Constant: string, "nr"
+                          Constant: string, "nu"
+                          Constant: string, "nz"
+                          Constant: string, "om"
+                          Constant: string, "pa"
+                          Constant: string, "pe"
+                          Constant: string, "pf"
+                          Constant: string, "pg"
+                          Constant: string, "ph"
+                          Constant: string, "pk"
+                          Constant: string, "pl"
+                          Constant: string, "pm"
+                          Constant: string, "pn"
+                          Constant: string, "pr"
+                          Constant: string, "ps"
+                          Constant: string, "pt"
+                          Constant: string, "pw"
+                          Constant: string, "py"
+                          Constant: string, "qa"
+                          Constant: string, "re"
+                          Constant: string, "ro"
+                          Constant: string, "rs"
+                          Constant: string, "ru"
+                          Constant: string, "rw"
+                          Constant: string, "sa"
+                          Constant: string, "sb"
+                          Constant: string, "sc"
+                          Constant: string, "sd"
+                          Constant: string, "se"
+                          Constant: string, "sg"
+                          Constant: string, "sh"
+                          Constant: string, "si"
+                          Constant: string, "sj"
+                          Constant: string, "sk"
+                          Constant: string, "sl"
+                          Constant: string, "sm"
+                          Constant: string, "sn"
+                          Constant: string, "so"
+                          Constant: string, "sr"
+                          Constant: string, "ss"
+                          Constant: string, "st"
+                          Constant: string, "sv"
+                          Constant: string, "sx"
+                          Constant: string, "sy"
+                          Constant: string, "sz"
+                          Constant: string, "tc"
+                          Constant: string, "td"
+                          Constant: string, "tf"
+                          Constant: string, "tg"
+                          Constant: string, "th"
+                          Constant: string, "tj"
+                          Constant: string, "tk"
+                          Constant: string, "tl"
+                          Constant: string, "tm"
+                          Constant: string, "tn"
+                          Constant: string, "to"
+                          Constant: string, "tr"
+                          Constant: string, "tt"
+                          Constant: string, "tv"
+                          Constant: string, "tw"
+                          Constant: string, "tz"
+                          Constant: string, "ua"
+                          Constant: string, "ug"
+                          Constant: string, "uk"
+                          Constant: string, "us"
+                          Constant: string, "uy"
+                          Constant: string, "uz"
+                          Constant: string, "va"
+                          Constant: string, "vc"
+                          Constant: string, "ve"
+                          Constant: string, "vg"
+                          Constant: string, "vi"
+                          Constant: string, "vn"
+                          Constant: string, "vu"
+                          Constant: string, "wf"
+                          Constant: string, "ws"
+                          Constant: string, "xk"
+                          Constant: string, "ye"
+                          Constant: string, "yt"
+                          Constant: string, "za"
+                          Constant: string, "zm"
+                          Constant: string, "zw"
+                          ID: NULL
+                      Decl: i, [], [], [], []
+                        TypeDecl: i, [], None
+                          IdentifierType: ['int']
+                      For: 
+                        Assignment: =
+                          ID: i
+                          Constant: int, 0
+                        BinaryOp: !=
+                          ArrayRef: 
+                            ID: country_domains
+                            ID: i
+                          ID: NULL
+                        UnaryOp: ++
+                          ID: i
+                        Compound: 
+                          If: 
+                            BinaryOp: ==
+                              FuncCall: 
+                                ID: strcmp
+                                ExprList: 
+                                  ArrayRef: 
+                                    ID: country_domains
+                                    ID: i
+                                  ID: countryCode
+                              Constant: int, 0
+                            Compound: 
+                              Break: 
+                      If: 
+                        BinaryOp: ==
+                          ArrayRef: 
+                            ID: country_domains
+                            ID: i
+                          ID: NULL
+                        Compound: 
+          Assignment: =
+            ID: node
+            StructRef: ->
+              ID: node
+              ID: sibling
+      Assignment: =
+        ID: node
+        StructRef: ->
+          ID: root
+          ID: child
+      While: 
+        BinaryOp: !=
+          ID: node
+          ID: NULL
+        Compound: 
+          If: 
+            BinaryOp: ==
+              FuncCall: 
+                ID: strcmp
+                ExprList: 
+                  StructRef: ->
+                    ID: node
+                    ID: type
+                  Constant: string, "input_url"
+              Constant: int, 0
+            Compound: 
+              Decl: url, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: url, [], None
+                    IdentifierType: ['char']
+                StructRef: ->
+                  ID: node
+                  ID: value
+              If: 
+                BinaryOp: ||
+                  BinaryOp: ==
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        ID: url
+                        Constant: string, "http://"
+                    ID: url
+                  BinaryOp: ==
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        ID: url
+                        Constant: string, "https://"
+                    ID: url
+                Compound: 
+                  Assignment: +=
+                    ID: url
+                    Constant: int, 7
+              Decl: domain, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: domain, [], None
+                    IdentifierType: ['char']
+                BinaryOp: +
+                  FuncCall: 
+                    ID: strchr
+                    ExprList: 
+                      ID: url
+                      Constant: char, '/'
+                  Constant: int, 2
+              If: 
+                BinaryOp: ==
+                  ID: domain
+                  ID: NULL
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+              Decl: domainEnd, [], [], [], []
+                PtrDecl: []
+                  TypeDecl: domainEnd, [], None
+                    IdentifierType: ['char']
+                FuncCall: 
+                  ID: strchr
+                  ExprList: 
+                    ID: domain
+                    Constant: char, '/'
+              If: 
+                BinaryOp: ==
+                  ID: domainEnd
+                  ID: NULL
+                Compound: 
+                  Assignment: =
+                    ID: domainEnd
+                    FuncCall: 
+                      ID: strchr
+                      ExprList: 
+                        ID: domain
+                        Constant: char, '\0'
+              Decl: domainName, [], [], [], []
+                ArrayDecl: []
+                  TypeDecl: domainName, [], None
+                    IdentifierType: ['char']
+                  Constant: int, 256
+              FuncCall: 
+                ID: strncpy
+                ExprList: 
+                  ID: domainName
+                  ID: domain
+                  BinaryOp: -
+                    ID: domainEnd
+                    ID: domain
+              Assignment: =
+                ArrayRef: 
+                  ID: domainName
+                  BinaryOp: -
+                    ID: domainEnd
+                    ID: domain
+                Constant: char, '\0'
+              Decl: dots, [], [], [], []
+                TypeDecl: dots, [], None
+                  IdentifierType: ['int']
+                Constant: int, 0
+              For: 
+                DeclList: 
+                  Decl: c, [], [], [], []
+                    PtrDecl: []
+                      TypeDecl: c, [], None
+                        IdentifierType: ['char']
+                    ID: domainName
+                BinaryOp: !=
+                  UnaryOp: *
+                    ID: c
+                  Constant: char, '\0'
+                UnaryOp: ++
+                  ID: c
+                Compound: 
+                  If: 
+                    BinaryOp: ==
+                      UnaryOp: *
+                        ID: c
+                      Constant: char, '.'
+                    Compound: 
+                      UnaryOp: ++
+                        ID: dots
+              If: 
+                BinaryOp: ==
+                  ID: dots
+                  Constant: int, 3
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+              Decl: spchrs, [], [], [], []
+                TypeDecl: spchrs, [], None
+                  IdentifierType: ['int']
+                Constant: int, 0
+              For: 
+                DeclList: 
+                  Decl: c, [], [], [], []
+                    PtrDecl: []
+                      TypeDecl: c, [], None
+                        IdentifierType: ['char']
+                    StructRef: ->
+                      ID: node
+                      ID: value
+                BinaryOp: !=
+                  UnaryOp: *
+                    ID: c
+                  Constant: char, '\0'
+                UnaryOp: ++
+                  ID: c
+                Compound: 
+                  If: 
+                    BinaryOp: ||
+                      BinaryOp: ||
+                        BinaryOp: ||
+                          BinaryOp: ||
+                            BinaryOp: ||
+                              BinaryOp: ||
+                                BinaryOp: ||
+                                  BinaryOp: ==
+                                    UnaryOp: *
+                                      ID: c
+                                    Constant: char, '.'
+                                  BinaryOp: ==
+                                    UnaryOp: *
+                                      ID: c
+                                    Constant: char, '-'
+                                BinaryOp: ==
+                                  UnaryOp: *
+                                    ID: c
+                                  Constant: char, '_'
+                              BinaryOp: ==
+                                UnaryOp: *
+                                  ID: c
+                                Constant: char, ':'
+                            BinaryOp: ==
+                              UnaryOp: *
+                                ID: c
+                              Constant: char, '?'
+                          BinaryOp: ==
+                            UnaryOp: *
+                              ID: c
+                            Constant: char, '%'
+                        BinaryOp: ==
+                          UnaryOp: *
+                            ID: c
+                          Constant: char, '$'
+                      BinaryOp: ==
+                        UnaryOp: *
+                          ID: c
+                        Constant: char, '!'
+                    Compound: 
+                      UnaryOp: ++
+                        ID: spchrs
+              If: 
+                BinaryOp: >=
+                  ID: spchrs
+                  Constant: int, 7
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+          Assignment: =
+            ID: node
+            StructRef: ->
+              ID: node
+              ID: sibling
+      Assignment: =
+        ID: node
+        StructRef: ->
+          ID: root
+          ID: child
+      While: 
+        BinaryOp: !=
+          ID: node
+          ID: NULL
+        Compound: 
+          If: 
+            BinaryOp: ==
+              FuncCall: 
+                ID: strcmp
+                ExprList: 
+                  StructRef: ->
+                    ID: node
+                    ID: type
+                  Constant: string, "input_url"
+              Constant: int, 0
+            Compound: 
+              Decl: malicious_urls, ['const'], [], [], []
+                ArrayDecl: []
+                  PtrDecl: []
+                    TypeDecl: malicious_urls, ['const'], None
+                      IdentifierType: ['char']
+                InitList: 
+                  Constant: string, "000owamail0.000webhostapp.com"
+                  Constant: string, "0q2.sitey.me"
+                  ID: NULL
+              For: 
+                DeclList: 
+                  Decl: i, [], [], [], []
+                    TypeDecl: i, [], None
+                      IdentifierType: ['int']
+                    Constant: int, 0
+                BinaryOp: !=
+                  ArrayRef: 
+                    ID: malicious_urls
+                    ID: i
+                  ID: NULL
+                UnaryOp: ++
+                  ID: i
+                Compound: 
+                  If: 
+                    BinaryOp: !=
+                      FuncCall: 
+                        ID: strstr
+                        ExprList: 
+                          StructRef: ->
+                            ID: node
+                            ID: value
+                          ArrayRef: 
+                            ID: malicious_urls
+                            ID: i
+                      ID: NULL
+                    Compound: 
+                      Return: 
+                        Constant: int, 1
+          Assignment: =
+            ID: node
+            StructRef: ->
+              ID: node
+              ID: sibling
+      Assignment: =
+        ID: node
+        StructRef: ->
+          ID: root
+          ID: child
+      While: 
+        BinaryOp: !=
+          ID: node
+          ID: NULL
+        Compound: 
+          If: 
+            BinaryOp: ==
+              FuncCall: 
+                ID: strcmp
+                ExprList: 
+                  StructRef: ->
+                    ID: node
+                    ID: type
+                  Constant: string, "input_url"
+              Constant: int, 0
+            Compound: 
+              If: 
+                BinaryOp: ||
+                  BinaryOp: ||
+                    BinaryOp: ||
+                      BinaryOp: ||
+                        BinaryOp: !=
+                          FuncCall: 
+                            ID: strstr
+                            ExprList: 
+                              StructRef: ->
+                                ID: node
+                                ID: value
+                              Constant: string, "bit.ly"
+                          ID: NULL
+                        BinaryOp: !=
+                          FuncCall: 
+                            ID: strstr
+                            ExprList: 
+                              StructRef: ->
+                                ID: node
+                                ID: value
+                              Constant: string, "goo.gl"
+                          ID: NULL
+                      BinaryOp: !=
+                        FuncCall: 
+                          ID: strstr
+                          ExprList: 
+                            StructRef: ->
+                              ID: node
+                              ID: value
+                            Constant: string, "tinyurl.com"
+                        ID: NULL
+                    BinaryOp: !=
+                      FuncCall: 
+                        ID: strstr
+                        ExprList: 
+                          StructRef: ->
+                            ID: node
+                            ID: value
+                          Constant: string, "t.co"
+                      ID: NULL
+                  BinaryOp: !=
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        StructRef: ->
+                          ID: node
+                          ID: value
+                        Constant: string, "shorturl.at"
+                    ID: NULL
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+          Assignment: =
+            ID: node
+            StructRef: ->
+              ID: node
+              ID: sibling
+      Assignment: =
+        ID: node
+        StructRef: ->
+          ID: root
+          ID: child
+      While: 
+        BinaryOp: !=
+          ID: node
+          ID: NULL
+        Compound: 
+          If: 
+            BinaryOp: ==
+              FuncCall: 
+                ID: strcmp
+                ExprList: 
+                  StructRef: ->
+                    ID: node
+                    ID: type
+                  Constant: string, "input_url"
+              Constant: int, 0
+            Compound: 
+              If: 
+                BinaryOp: ||
+                  BinaryOp: ||
+                    BinaryOp: !=
+                      FuncCall: 
+                        ID: strstr
+                        ExprList: 
+                          StructRef: ->
+                            ID: node
+                            ID: value
+                          Constant: string, ":8080"
+                      ID: NULL
+                    BinaryOp: !=
+                      FuncCall: 
+                        ID: strstr
+                        ExprList: 
+                          StructRef: ->
+                            ID: node
+                            ID: value
+                          Constant: string, ":4444"
+                      ID: NULL
+                  BinaryOp: !=
+                    FuncCall: 
+                      ID: strstr
+                      ExprList: 
+                        StructRef: ->
+                          ID: node
+                          ID: value
+                        Constant: string, ":12345"
+                    ID: NULL
+                Compound: 
+                  Return: 
+                    Constant: int, 1
+          Assignment: =
+            ID: node
+            StructRef: ->
+              ID: node
+              ID: sibling
+      Return: 
+        Constant: int, 0
+  FuncDef: 
+    Decl: generateParseTreeAndAnalyze, [], [], [], []
+      FuncDecl: 
+        TypeDecl: generateParseTreeAndAnalyze, [], None
+          IdentifierType: ['void']
+    Compound: 
+      Decl: root, [], [], [], []
+        PtrDecl: []
+          TypeDecl: root, [], None
+            IdentifierType: ['Node']
+        FuncCall: 
+          ID: newNode
+          ExprList: 
+            Constant: string, "Root"
+            Constant: string, "program"
+      Decl: url, [], [], [], []
+        ArrayDecl: []
+          TypeDecl: url, [], None
+            IdentifierType: ['char']
+          Constant: int, 1000
+      FuncCall: 
+        ID: fgets
+        ExprList: 
+          ID: url
+          UnaryOp: sizeof
+            ID: url
+          ID: stdin
+      If: 
+        BinaryOp: ==
+          ArrayRef: 
+            ID: url
+            BinaryOp: -
+              FuncCall: 
+                ID: strlen
+                ExprList: 
+                  ID: url
+              Constant: int, 1
+          Constant: char, '\n'
+        Compound: 
+          Assignment: =
+            ArrayRef: 
+              ID: url
+              BinaryOp: -
+                FuncCall: 
+                  ID: strlen
+                  ExprList: 
+                    ID: url
+                Constant: int, 1
+            Constant: char, '\0'
+      Decl: urlNode, [], [], [], []
+        PtrDecl: []
+          TypeDecl: urlNode, [], None
+            IdentifierType: ['Node']
+        FuncCall: 
+          ID: newNode
+          ExprList: 
+            ID: url
+            Constant: string, "input_url"
+      FuncCall: 
+        ID: addChild
+        ExprList: 
+          ID: root
+          ID: urlNode
+      ID: url_regex
+      Decl: reti, [], [], [], []
+        TypeDecl: reti, [], None
+          IdentifierType: ['int']
+        FuncCall: 
+          ID: regcomp
+          ExprList: 
+            UnaryOp: &
+              ID: url_regex
+            Constant: string, "^https?://[a-zA-Z0-9.-]+(/.*)?$"
+            ID: REG_EXTENDED
+      If: 
+        ID: reti
+        Compound: 
+          FuncCall: 
+            ID: fprintf
+            ExprList: 
+              ID: stderr
+              Constant: string, "Could not compile regex\n"
+          Return: 
+      Assignment: =
+        ID: reti
+        FuncCall: 
+          ID: regexec
+          ExprList: 
+            UnaryOp: &
+              ID: url_regex
+            ID: url
+            Constant: int, 0
+            ID: NULL
+            Constant: int, 0
+      If: 
+        ID: reti
+        Compound: 
+          Decl: invalidUrlNode, [], [], [], []
+            PtrDecl: []
+              TypeDecl: invalidUrlNode, [], None
+                IdentifierType: ['Node']
+            FuncCall: 
+              ID: newNode
+              ExprList: 
+                Constant: string, "Invalid URL format"
+                Constant: string, "error"
+          FuncCall: 
+            ID: addChild
+            ExprList: 
+              ID: root
+              ID: invalidUrlNode
+          Return: 
+      FuncCall: 
+        ID: performSemanticAnalysis
+        ExprList: 
+          ID: root
+  FuncDef: 
+    Decl: main, [], [], [], []
+      FuncDecl: 
+        TypeDecl: main, [], None
+          IdentifierType: ['int']
+    Compound: 
+      FuncCall: 
+        ID: generateParseTreeAndAnalyze
+      Return: 
+        Constant: int, 0

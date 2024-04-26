@@ -1,0 +1,65 @@
+Program
+└── Declaration: main
+    └── FunctionDefinition: main
+        ├── Declaration: root (Node*)
+        │   └── AssignmentExpression
+        │       ├── Identifier: root
+        │       └── FunctionCall: newNode
+        │           ├── StringLiteral: "Root"
+        │           └── StringLiteral: "program"
+        ├── Declaration: url (char[1000])
+        │   └── ArrayDeclaration
+        │       ├── TypeName: char
+        │       └── IntegerLiteral: 1000
+        ├── ExpressionStatement: printf("Enter URL: ")
+        │   └── FunctionCall: printf
+        │       └── StringLiteral: "Enter URL: "
+        ├── ExpressionStatement: fgets(url, sizeof(url), stdin)
+        │   └── FunctionCall: fgets
+        │       ├── Identifier: url
+        │       ├── SizeofExpression: url
+        │       └── Identifier: stdin
+        ├── IfStatement: if (url[strlen(url) - 1] == '\n')
+        │   └── CompoundStatement
+        │       └── ExpressionStatement: url[strlen(url) - 1] = '\0'
+        ├── Declaration: urlNode (Node*)
+        │   └── AssignmentExpression
+        │       ├── Identifier: urlNode
+        │       └── FunctionCall: newNode
+        │           ├── Identifier: url
+        │           └── StringLiteral: "input_url"
+        ├── ExpressionStatement: addChild(root, urlNode)
+        │   └── FunctionCall: addChild
+        │       ├── Identifier: root
+        │       └── Identifier: urlNode
+        ├── Declaration: url_regex (regex_t)
+        │   └── AssignmentExpression
+        │       ├── Identifier: url_regex
+        │       └── FunctionCall: regcomp
+        │           ├── Identifier: &url_regex
+        │           ├── StringLiteral: "^https?://[a-zA-Z0-9.-]+(/.*)?$"
+        │           └── Identifier: REG_EXTENDED
+        ├── ExpressionStatement: regexec(&url_regex, url, 0, NULL, 0)
+        │   └── FunctionCall: regexec
+        │       ├── Identifier: &url_regex
+        │       ├── Identifier: url  │   
+        │       └── NullPointer
+        ├── IfStatement: if (reti)
+        │   └── CompoundStatement
+        │       ├── Declaration: invalidUrlNode (Node*)
+        │       │   └── AssignmentExpression
+        │       │       ├── Identifier: invalidUrlNode
+        │       │       └── FunctionCall: newNode
+        │       │           ├── StringLiteral: "Invalid URL format"
+        │       │           └── StringLiteral: "error"
+        │       ├── ExpressionStatement: addChild(root, invalidUrlNode)
+        │       │   └── FunctionCall: addChild
+        │       │       ├── Identifier: root
+        │       │       └── Identifier: invalidUrlNode
+        │       └── ExpressionStatement: printf("Semantic Analysis: Invalid URL\n")
+        │           └── FunctionCall: printf
+        │               └── StringLiteral: "Semantic Analysis: Invalid URL\n"
+        ├── ExpressionStatement: performSemanticAnalysis(root)
+        │   └── FunctionCall: performSemanticAnalysis
+        │       └── Identifier: root
+        └── ReturnStatement: return 0
